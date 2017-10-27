@@ -82,6 +82,7 @@ Der Zeitstempel (ts) gibt den ursprünglichen Lesezeitpunkt des Sensors an. Er i
 Der Messwertstatus ist eine ganzzahlige Nummer aus drei Bereichen. Die verwendete Nummer innerhalb eines Bereichs ist applikationsspezifisch (z.B. 100=Batterie leer, 200=Sensor defekt, 201=Messbereichsunterschreitung, 202=Messbereichsüberschreitung). Der Status ist optional. Wenn der Status nicht angegeben worden ist, so wird er implizit als _GOOD_ (Wert 0) angenommen.
 
 Bereichswerte für den Status (s):
+
 Nummer      | Symbol      | Beschreibung
 ------------|-------------|-------------
 0 bis 99    | _GOOD_      | Dem Messwert kann vertraut werden.
