@@ -62,7 +62,7 @@ Adressbestandteile, die mit einer Tilde (~) beginnen, sind für das VEAP-Protoko
 
 ## Dienste
 
-Jedes Objekt kann verschiedene Dienste anbieten. Die Dienste werden auf ein HTTP-Verb (z.B. GET) und/oder auf ein spezielles Adressende (z.B. ```/~pv```) abgebildet.
+Jedes Objekt kann verschiedene Dienste anbieten. Die Dienste werden auf ein HTTP-Verb (z.B. GET) und/oder auf ein spezielles Adressende (z.B. ```/~pv```) abgebildet. Die zu übertragenden Datenstrukturen werden mit Hilfe der [JavaScript Object Notation (JSON)](https://de.wikipedia.org/wiki/JavaScript_Object_Notation) kodiert. Die Standardzeichenkodierung ist [UTF-8](https://de.wikipedia.org/wiki/UTF-8).
 
 ### Datenpunkt lesen
 
@@ -91,7 +91,7 @@ Nummer      | Symbol      | Beschreibung
 
 ### Datenpunkt schreiben
 
-Über die HTTP-Methode PUT und der Adressendung ```/~pv``` wird von einem Objekt der aktuelle Prozesswert beschrieben. Der Prozesswert ist [wie oben beschrieben](#datenpunkt-lesen) aufgebaut.
+Über die HTTP-Methode PUT (ein Server kann zusätzlich auch die POST-Methode akzeptieren) und der Adressendung ```/~pv``` wird von einem Datenpunkt der aktuelle Prozesswert beschrieben. Der Prozesswert ist [wie oben beschrieben](#datenpunkt-lesen) aufgebaut.
 
 ### Objekt-/Datenpunkteigenschaften lesen
 
@@ -271,7 +271,7 @@ GET /
 
 Antwort:
 
-Die untergeordneten Objekte werden über HTTTP-Link-Header zurück gegeben. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```/~rel/comp``` besagt, dass ```/a```, ```/b``` und ```/~vendor``` Unterobjekte von ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)).
+Die untergeordneten Objekte werden über HTTP-Link-Header zurück gegeben. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```/~rel/comp``` besagt, dass ```/a```, ```/b``` und ```/~vendor``` Unterobjekte von ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)).
 
 ```
 HTTP 200 OK
