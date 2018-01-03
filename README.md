@@ -1,7 +1,6 @@
 # Very Easy Automation Protocol (VEAP)
 
-Im Folgenden wird ein TCP/IP-basiertes Kommunikationsprotokoll für den Bereich Automatisierung vorgestellt, das **einfach verständlich** und **leicht zu implementieren** ist und dennoch auch weitergehende Anforderungen, wie die **Modellierung von Datenmodellen** oder 
-**Sicherheitsanforderungen**, erfüllt.
+Im Folgenden wird ein TCP/IP-basiertes Kommunikationsprotokoll für den Bereich Automatisierung vorgestellt, das **einfach verständlich** und **leicht zu implementieren** ist und dennoch auch weitergehende Anforderungen, wie die **Modellierung von Datenmodellen** oder **Sicherheitsanforderungen**, erfüllt.
 
 Das Protokoll kann beispielsweise im Bereich der Gebäudeautomatisierung oder für das Internet-der-Dinge eingesetzt werden. Es kann Geräte untereinander, mit überlagerten Systemen (z.B. Zentralen, Betriebsdatenerfassung) oder mit grafischen Benutzerschnittstellen verbinden.
 
@@ -87,7 +86,7 @@ Nummer      | Symbol      | Beschreibung
 ------------|-------------|-------------
 0 bis 99    | _GOOD_      | Dem Messwert kann vertraut werden.
 100 bis 199 | _UNCERTAIN_ | Der Messwert ist fragwürdig.
-200 bis 299 | _BAD_       | Der Messwert ist schlecht, und sollte nicht weiter verarbeitet werden.
+200 bis 299 | _BAD_       | Der Messwert ist schlecht und sollte nicht weiter verarbeitet werden.
 
 ### Datenpunkt schreiben
 
@@ -157,17 +156,39 @@ Für einen einfachen VEAP-Client reicht es aus, den HTTP-Status mit 200 zu vergl
 
 ### Historie eines Datenpunktes lesen (Optional)
 
-_Dieser Dienst muss noch spezifiziert werden._
+Über die HTTP-Methode GET und der Adressendung ```/~hist``` wird die Historie eines Datenpunktes angefragt. Die Historie gibt den zeitlichen Verlaufs eines Datenpunktwertes wieder. Der abgefragte Zeitbereich wird über GET-Parameter angegeben.
 
-### Mehrere Datenpunkte im Paket lesen oder schreiben (Optional)
+Folgende GET-Parameter sind definiert:
 
-_Dieser Dienst muss noch spezifiziert werden._
+Parametername|Bedeutung
+-------------|---------
+begin        |Beginn des Zeitbereichs (Millisekunden seit 1.1.1970 UTC, Zeitpunkt eingeschlossen)
+end          |Ende des Zeitbereichs (Millisekunden seit 1.1.1970 UTC, Zeitpunkt ausgeschlossen)
+limit        |Maximale Anzahl an zurückzugebenden Einträgen (optional)
 
-### Ereignisorientierte Abfrage von Datenpunkten (Optional)
+```begin``` und ```end``` geben den angefragten Zeitbereich an. Die Zeitstempel der zurückgegebenen Zeitreihe müssen größer oder gleich ```begin``` und kleiner als ```end``` sein. Wenn beide Parameter fehlen, so wird die Zeitreihe der letzten 24 Stunden zurückgegeben. 
 
-Wenn ein VEAP-Server diesen Dienst anbietet, hat ein Client die Möglichkeit auf Datenpunktänderungen sofort reagieren zu können. Dazu wird der Dienst für Paketanfragen erweitert.
+Mit ```limit``` kann optional die Anzahl der zurückzugebenden Einträge beschränkt werden. Die Anzahl der zurückgegebenen Einträge muss immer kleiner oder gleich ```limit``` sein. Wenn dieser Parameter nicht angegeben wurde, entscheidet der VEAP-Server über eine mögliche Begrenzung.
 
-_Dieser Dienst muss noch spezifiziert werden._
+Beispiel-Anfrage (Datenpunkt **a**, 1.1.2018 bis 2.1.2018 MEZ, max. die ersten 10 Einträge):
+```
+GET /a/~hist?begin=1514761200&end=1514847600&limit=10
+```
+
+Der Server antwortet mit einem JSON-Objekt, dass aus den Feldern ```v``` (Werte), ```ts``` (Zeitstempel) und optional ```s``` (Status) besteht. Die Felder sind jeweils JSON-Arrays, sie müssen alle die gleiche Länge besitzen. Die Bedeutung der Elemente ist identisch wie beim [Lesen eines Datenpunktes](#datenpunkt-lesen). Die Arrays müssen zeitlich aufsteigend sortiert sein. Die zeitliche Sortierung der Einträge erfolgt vor Anwendung des Limits. 
+
+Beispiel-Antwort:
+```
+{
+  "v": [123.456, 234.567, 345.678],
+  "ts": [1514761200, 1514761201, 1514761202],
+  "s": [0, 0, 0]
+}
+```
+
+### Historie eines Datenpunktes schreiben (Optional)
+
+Über die HTTP-Methode PUT (ein Server kann zusätzlich auch die POST-Methode akzeptieren) und der Adressendung ```/~hist``` wird die Historie eines Datenpunktes beschrieben. Die Historie ist [wie oben beschrieben](#historie-eines-datenpunktes-lesen-optional) aufgebaut.
 
 ## Beispiele
 
@@ -283,6 +304,30 @@ Link: </a>; rel="/~rel/comp",
   "name": "Wurzelverzeichnis"
 }
 ```
+
+## Geplante Erweiterungen
+
+### Ereignisorientierte Abfrage von Datenpunkten (Optional)
+
+Wenn ein VEAP-Server diesen Dienst anbietet, hat ein Client die Möglichkeit auf Datenpunktänderungen sofort reagieren zu können.
+
+_Dieser Dienst muss noch spezifiziert werden._
+
+## Konzeptionelle Entscheidungen
+
+In diesem Abschnitt sind einige grundlegende Entscheidungen zum Protokoll-Design erklärt.
+
+### Mehrere Datenpunkte im Paket lesen oder schreiben
+
+Das Protokoll besitzt keinen Dienst um mehrere Datenpunkte in einem Paket zu lesen oder zu schreiben. Dieser Dienst hätte folgende Vorteile:
+
+* Reduzierung von Netzwerkanfragen
+* Atomares Lesen oder Schreiben von mehreren Datenpunkten
+
+Die zwei Vorteile wiegen aber nicht die dadurch erhöhte Komplexität des Protokolls aus folgenden Gründen auf:
+
+* Durch HTTP-Pipelining (HTTP/1.1) bzw. -Multiplexing (HTTP/2) kann bereits durch das unterlagerte Protokoll die Anzahl der Netzwerkanfragen reduziert werden.
+* Für das atomare Lesen oder Schreiben von mehreren Datenpunkten existieren keine relevanten Anwendungsfälle, die nicht durch andere Möglichkeiten des Protokolls gelöst werden können. 
 
 ## Lizenz
 
