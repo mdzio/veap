@@ -65,7 +65,7 @@ Jedes Objekt kann verschiedene Dienste anbieten. Die Dienste werden auf ein HTTP
 
 ### Datenpunkt lesen
 
-Über die HTTP-Methode GET und der Adressendung ```/~pv``` wird von einem Objekt der aktuelle Prozesswert angefragt. Ein Prozesswert besteht aus bis zu drei Komponenten: Wert (v), Zeitstempel  (ts) und Status (s). Zeitstempel und Status sind optional. Ein entsprechendes JSON-Objekt sieht dann beispielsweise wie folgt aus:
+Über die HTTP-Methode GET und der Adressendung ```/~pv``` (Process Value) wird von einem Objekt der aktuelle Prozesswert angefragt. Ein Prozesswert besteht aus bis zu drei Komponenten: Wert (v), Zeitstempel  (ts) und Status (s). Zeitstempel und Status sind optional. Ein entsprechendes JSON-Objekt sieht dann beispielsweise wie folgt aus:
 ```
 {
   "v": 123.456,
@@ -88,6 +88,8 @@ Nummer      | Symbol      | Beschreibung
 100 bis 199 | _UNCERTAIN_ | Der Messwert ist fragwürdig.
 200 bis 299 | _BAD_       | Der Messwert ist schlecht und sollte nicht weiter verarbeitet werden.
 
+Als Prozesswerte werden veränderliche Eigenschaften eines Objektes abgebildet. Statische Eigenschaften werden über das [Lesen der Objekteigenschaften](#objekt-datenpunkteigenschaften-lesen) ermittelt.
+
 ### Datenpunkt schreiben
 
 Über die HTTP-Methode PUT (ein Server kann zusätzlich auch die POST-Methode akzeptieren) und der Adressendung ```/~pv``` wird von einem Datenpunkt der aktuelle Prozesswert beschrieben. Der Prozesswert ist [wie oben beschrieben](#datenpunkt-lesen) aufgebaut.
@@ -102,9 +104,7 @@ Beispiel-Antwort:
   "name": "HWR Deckenlampe",
   "description": "4xGU10,20W",
   "address": "BidCos-RF.ABC01232:3.STATE",
-  "iseId": 1234,
-  "rooms": "HWR,UG",
-  "functions": "Licht"
+  "iseId": 1234
 }
 ```
 
@@ -112,31 +112,34 @@ Beispiel-Antwort:
 
 Ein Objekt bzw. Datenpunkt kann selber andere Objekte enthalten, ähnlich wie ein Ordner in einem Dateisystem, oder auf andere Objekte verweisen, ähnlich wie ein Verweis bzw. Link in einem Dateisystem. Wenn, wie im [vorigen Abschnitt](#objekt-datenpunkteigenschaften-lesen) beschrieben, die Objekteigenschaften gelesen werden, so werden zusätzlich die referenzierten Objekte aufgelistet.
 
-Dies geschieht über Link-Einträge im HTTP-Header der Form ```Link: </a/b/c>; rel="typ"```. Bei ```/a/b/c``` handelt sich um die absolute oder relative Adresse des referenzierten Objektes. Mit ```rel="typ"``` wird der Typ der Relation angegeben. Es können mehrere HTTP-Link-Header existieren, oder ein HTTP-Link-Header besitzt mehrere Einträge, die durch Kommas separiert sind.
+Dies geschieht über Link-Einträge im HTTP-Header der Form ```Link: </a/b/c>; rel="typ"```. Bei ```/a/b/c``` handelt sich um die absolute oder relative Adresse des referenzierten Objektes. Mit ```rel="typ"``` wird optional der Typ der Relation angegeben. Es können mehrere HTTP-Link-Header existieren, oder ein HTTP-Link-Header besitzt mehrere Einträge, die durch Kommas separiert sind.
 
-Beispiel-Header:
+Beispiel-Header (vom Objekt ```/sensor1```):
 ```
-Link: </a>; rel="/~rel/comp",
-  </b>; rel="/~rel/comp"
+Link: </sensor1/temperature>; rel="datapoint",
+  </sensor1/humidity>; rel="datapoint",
+  </rooms/kitchen>; rel="room"
 ```
 
-Es sind folgende Beziehungstypen definiert:
-* /~rel/comp \
-  Das referenzierte Objekt ist im übergeordneten Objekt enthalten (wie in einem Dateisystemordner).
-* /~rel/link \
-  Auf das referenzierte Objekt wird verwiesen (wie ein Dateisystemverweis). Die Verwendung dieses Typs ist optional.
-* /~rel/svc \
-  Es wird auf ein Dienst-Objekt verwiesen. Die Verwendung dieses Typs ist optional.
-  * /~rel/svc/pv (Datenpunkt lesen/schreiben)
-  * /~rel/svc/hist (Historie lesen)
+Es sind folgende Beziehungstypen vorab definiert:
 
-Mit Hilfe der Relation ```/~rel/comp``` können Datenpunkte wie in einem Verzeichnisbaum einsortiert werden. 
+  Typ (rel) | Art des referenzierten Objektes
+:----------:|:-------------------------------
+interface   | Kommunikationsschnittstelle
+device      | Gerät
+channel     | Kanal
+datapoint   | Datenpunkt
+room        | Raum
+function    | Funktion oder Gewerk
+service     | Dienst; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
 
-Beziehungstypen können weiter verfeinert werden. So kann auf einen Kanal von einem Gerät wie folgt verwiesen werden: ```rel="/~rel/comp/channel"```. Mit ```rel="/~rel/link/room"``` wird auf das zugehörige Raumobjekt verwiesen.
+Jeder VEAP-Server kann zusätzlich beliebige eigene Beziehungstypen definieren und auch auf die Verwendung der vordefinierten verzichten.
 
-Eine Tiefensuche darf nur den Relationen vom Typ ```rel="/~rel/comp"``` folgen. Dazu zählen auch verfeinerte Angaben (z.B. ```/~rel/comp/channel```).
+#### Hierarchie der Objekte
 
-Über ```/~rel/svc``` können die angebotenen Dienste eines Objektes erkundet werden (z.B. Datenpunkt lesen/schreiben).
+Die Objekte sollten hierarchisch strukturiert werden. Dieses wird über den Adressierungspfad abgebildet: Das Objekt ```/sensor1/temperature``` ist Bestandteil des Objekts ```/sensor1```. Es handelt sich hier um eine Komposition.
+
+Die Objektarten _Kommunikationsschnittstelle_ → _Gerät_ → _Kanal_ → _Datenpunkt_ müsen eine Hierarchie bilden, wobei einzelne Bestandteile optional sind. 
 
 ### Signalisierung von Fehlern
 
@@ -156,7 +159,7 @@ Für einen einfachen VEAP-Client reicht es aus, den HTTP-Status mit 200 zu vergl
 
 ### Historie eines Datenpunktes lesen (Optional)
 
-Über die HTTP-Methode GET und der Adressendung ```/~hist``` wird die Historie eines Datenpunktes angefragt. Die Historie gibt den zeitlichen Verlaufs eines Datenpunktwertes wieder. Der abgefragte Zeitbereich wird über GET-Parameter angegeben.
+Über die HTTP-Methode GET und der Adressendung ```/~hist``` (History) wird die Historie eines Datenpunktes angefragt. Die Historie gibt den zeitlichen Verlaufs eines Datenpunktwertes wieder. Der abgefragte Zeitbereich wird über GET-Parameter angegeben.
 
 Folgende GET-Parameter sind definiert:
 
@@ -221,7 +224,7 @@ HTTP 200 OK
 
 #### Datenpunkt schreiben
 
-Im Beispiel ist ```/b``` die Adressierug des Datenpunktes und ```~pv``` (Process value) die Adressierung des Dienstes _Prozesswert lesen/schreiben_. Im Feld "v" ist der zu setzende Wert des Datenpunktes. Die Felder "ts" (Zeitstempel) und "s" (Status) sind optional.
+Im Beispiel ist ```/b``` die Adressierug des Datenpunktes und ```~pv``` (Process value) die Adressierung des Dienstes _Prozesswert lesen/schreiben_. Im Feld "v" ist der zu setzende Wert des Datenpunktes. Die Felder "ts" (Timestamp/Zeitstempel) und "s" (Status) sind optional.
 
 Anfrage:
 ```
@@ -292,13 +295,13 @@ GET /
 
 Antwort:
 
-Die untergeordneten Objekte werden über HTTP-Link-Header zurück gegeben. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```/~rel/comp``` besagt, dass ```/a```, ```/b``` und ```/~vendor``` Unterobjekte von ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)).
+Die untergeordneten Objekte werden über HTTP-Link-Header zurück gegeben. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```datapoint``` besagt, dass ```/a``` und ```/b``` Datenpunkte vom Wurzelobjekt ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)). ```/~vendor``` ist ein untypisierter Verweis auf ein Unterobjekt.
 
 ```
 HTTP 200 OK
-Link: </a>; rel="/~rel/comp",
-  </b>; rel="/~rel/comp",
-  </~vendor>; rel="/~rel/comp",
+Link: </a>; rel="datapoint",
+  </b>; rel="datapoint",
+  </~vendor>
 
 {
   "name": "Wurzelverzeichnis"
@@ -312,22 +315,6 @@ Link: </a>; rel="/~rel/comp",
 Wenn ein VEAP-Server diesen Dienst anbietet, hat ein Client die Möglichkeit auf Datenpunktänderungen sofort reagieren zu können.
 
 _Dieser Dienst muss noch spezifiziert werden._
-
-## Konzeptionelle Entscheidungen
-
-In diesem Abschnitt sind einige grundlegende Entscheidungen zum Protokoll-Design erklärt.
-
-### Mehrere Datenpunkte im Paket lesen oder schreiben
-
-Das Protokoll besitzt keinen Dienst um mehrere Datenpunkte in einem Paket zu lesen oder zu schreiben. Dieser Dienst hätte folgende Vorteile:
-
-* Reduzierung von Netzwerkanfragen
-* Atomares Lesen oder Schreiben von mehreren Datenpunkten
-
-Die zwei Vorteile wiegen aber nicht die dadurch erhöhte Komplexität des Protokolls aus folgenden Gründen auf:
-
-* Durch HTTP-Pipelining (HTTP/1.1) bzw. -Multiplexing (HTTP/2) kann bereits durch das unterlagerte Protokoll die Anzahl der Netzwerkanfragen reduziert werden.
-* Für das atomare Lesen oder Schreiben von mehreren Datenpunkten existieren keine relevanten Anwendungsfälle, die nicht durch andere Möglichkeiten des Protokolls gelöst werden können. 
 
 ## Lizenz
 
