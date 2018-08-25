@@ -6,7 +6,7 @@ Das Protokoll kann beispielsweise im Bereich der Gebäudeautomatisierung oder f�
 
 Für die Ungeduldigen sind [Protokollbeispiele weiter unten](#beispiele) zu finden.
 
-Das VEAP-Protokoll befindet sich zurzeit noch in der Entwicklung!
+**Das VEAP-Protokoll befindet sich zurzeit noch in der Entwicklung!**
 
 ### Begründung für ein neues Protokoll
 
@@ -21,7 +21,7 @@ Um die Anforderungen zu erfüllen, muss das Protokoll zwingend auf bereits vorha
   * Unterscheidung von verschiedenen Protokoll-Diensten (z.B. Datenpunkt lesen/schreiben) durch HTTP-Verben (z.B. GET, PUT)
 * Adressierung von Objekten/Datenpunkten: [Uniform Resource Locator (URL)](https://de.wikipedia.org/wiki/Uniform_Resource_Locator)
 * Weitere Eigenschafte von [Representational State Transfer (REST)](https://de.wikipedia.org/wiki/Representational_State_Transfer)
-* Abbildung von Objektbeziehungen: [HTTP Link Header (RFC 5988)](https://tools.ietf.org/html/rfc5988)
+* Abbildung von Objektbeziehungen: [Angelehnt an HAL (Hypertext Appplication Language)](http://stateless.co/hal_specification.html)
 * Serialisierung (und Datentypen): [JavaScript Object Notation (JSON)](https://de.wikipedia.org/wiki/JavaScript_Object_Notation)
 * Authentifizierung: [HTTP-Authentifizierung](https://de.wikipedia.org/wiki/HTTP-Authentifizierung)
 * Transportverschlüsselung: [HTTPS](https://de.wikipedia.org/wiki/Hypertext_Transfer_Protocol_Secure)
@@ -49,7 +49,7 @@ Eine weitere Informationsebene sind Beziehungen von Datenpunkten zu Objekten (z.
 
 Jedes Objekt wird über einen eindeutigen Pfad im VEAP-Server adressiert (z.B. ```/bidcos-rf/abc012345/1/STATE```). Es kann beliebige applikationsabhängige Eigenschaften und Beziehungen (Relationen) zu anderen Objekten besitzen und verschiedene Dienste (z.B. _Prozesswert lesen/schreiben_) anbieten.
 
-Adressbestandteile, die mit einer Tilde (~) beginnen, sind für das VEAP-Protokoll reservierte Schlüsselwörter und dürfen nicht in Adressen von Objekten verwendet werden.
+Adressbestandteile, die mit einer Tilde (~) beginnen, sind für das VEAP-Protokoll reservierte Schlüsselwörter und dürfen nicht in Adressen von Objekten verwendet werden. Dies gilt ebenso für Bezeichner von Objekteigenschaften.
 
 #### Besondere Objekte
 
@@ -96,7 +96,7 @@ Als Prozesswerte werden veränderliche Eigenschaften eines Objektes abgebildet. 
 
 ### Objekt-/Datenpunkteigenschaften lesen
 
-Über die HTTP-Methode GET und der unveränderten Objektadresse werden applikationsspezifische Eigenschaften ([und auch die Beziehungen](#objektbeziehungen-erkunden)) eines Objekts ausgelesen. Diese Eigenschaften verändern sich im Gegensatz zum Prozesswert selten. 
+Über die HTTP-Methode GET und der unveränderten Objektadresse werden applikationsspezifische Eigenschaften ([und auch die Beziehungen](#objektbeziehungen-erkunden)) eines Objekts ausgelesen. Diese Eigenschaften verändern sich im Gegensatz zum Prozesswert selten. Die Bezeichner der Eigenschaften können frei gewählt werden, dürfen aber nicht mit einer Tilde (~) beginnen.
 
 Beispiel-Antwort:
 ```
@@ -112,26 +112,33 @@ Beispiel-Antwort:
 
 Ein Objekt bzw. Datenpunkt kann selber andere Objekte enthalten, ähnlich wie ein Ordner in einem Dateisystem, oder auf andere Objekte verweisen, ähnlich wie ein Verweis bzw. Link in einem Dateisystem. Wenn, wie im [vorigen Abschnitt](#objekt-datenpunkteigenschaften-lesen) beschrieben, die Objekteigenschaften gelesen werden, so werden zusätzlich die referenzierten Objekte aufgelistet.
 
-Dies geschieht über Link-Einträge im HTTP-Header der Form ```Link: </a/b/c>; rel="typ"```. Bei ```/a/b/c``` handelt sich um die absolute oder relative Adresse des referenzierten Objektes. Mit ```rel="typ"``` wird optional der Typ der Relation angegeben. Es können mehrere HTTP-Link-Header existieren, oder ein HTTP-Link-Header besitzt mehrere Einträge, die durch Kommas separiert sind.
+Referenzierte Objekte werden in der reservierten Objekteigenschaft ```~links``` aufgelistet. Es handelt sich dabei um ein JSON-Objekt, dessen Eigenschaftsnamen Beziehungstypen sind, und dessen Eigenschaftswerte entweder Link-Objekte (für 1:1 Beziehung) oder JSON-Arrays von Link-Objekten (für 1:N Beziehungen) sind. Link-Objekte besitzen mindestens die Eigenschaft ```href```, in der die absolute oder relative Adresse des referenzierten Objekts enthalten ist. Optional kann ein Link-Objekt die Eigenschaft ```title``` besitzen, die einen lesbaren Namen enthält.
 
-Beispiel-Header (vom Objekt ```/sensor1```):
+Beispiel (vom Objekt ```/sensor1```):
 ```
-Link: </sensor1/temperature>; rel="datapoint",
-  </sensor1/humidity>; rel="datapoint",
-  </rooms/kitchen>; rel="room"
+{
+  "~links": {
+    "datapoints": [
+      { "href": "/sensor1/temperature", "title": "Datenpunkt Temperatur" },
+      { "href": "/sensor1/humidity", "title": "Datenpunkt Luftfeuchtigkeit" }
+    ],
+    "room": { "href": "/rooms/kitchen", "title": "Raum des Sensors" }
+  }  
+}
 ```
 
-Es sind folgende Beziehungstypen vorab definiert:
+Es sind folgende Beziehungstypen vorab definiert (Singular bei einer 1:1-Beziehung, Plural bei einer 1:N-Beziehung):
 
-  Typ (rel) | Art des referenzierten Objektes
-:----------:|:-------------------------------
-interface   | Kommunikationsschnittstelle
-device      | Gerät
-channel     | Kanal
-datapoint   | Datenpunkt
-room        | Raum
-function    | Funktion oder Gewerk
-service     | Dienst; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
+  Typ        | Art des referenzierten Objektes
+:-----------:|:-------------------------------
+interface(s) | Kommunikationsschnittstelle(n)
+device(s)    | Gerät(e)
+channel(s)   | Kanal (Kanäle)
+datapoint(s) | Datenpunkt(e)
+room(s)      | Raum (Räume)
+function(s)  | Funktion(en) oder Gewerk(e)
+services     | Dienste; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
+vendor       | Informationen zum Server
 
 Jeder VEAP-Server kann zusätzlich beliebige eigene Beziehungstypen definieren und auch auf die Verwendung der vordefinierten verzichten.
 
@@ -295,16 +302,19 @@ GET /
 
 Antwort:
 
-Die untergeordneten Objekte werden über HTTP-Link-Header zurück gegeben. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```datapoint``` besagt, dass ```/a``` und ```/b``` Datenpunkte vom Wurzelobjekt ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)). ```/~vendor``` ist ein untypisierter Verweis auf ein Unterobjekt.
+Die Referenzen auf die untergeordneten Objekte sind in der Eigenschaft ```~links``` zu finden. Optional können auch Eigenschaften des abgefragten Objektes zurück geliefert werden (z.B. "name"). Der Relationstyp ```datapoints``` besagt, dass ```/a``` und ```/b``` Datenpunkte vom Wurzelobjekt ```/``` sind (s.a. [Objektbeziehungen](#objektbeziehungen-erkunden)). ```/~vendor``` ist ein Verweis auf Informationen zum VEAP-Server.
 
 ```
 HTTP 200 OK
-Link: </a>; rel="datapoint",
-  </b>; rel="datapoint",
-  </~vendor>
-
 {
-  "name": "Wurzelverzeichnis"
+  "name": "Wurzelverzeichnis",
+  "~links": {
+    "datapoints": [
+      { "href": "/a", "title": "Datenpunkt A" }
+      { "href": "/b", "title": "Datenpunkt B" }
+    ],
+    "vendor": { "href": "/~vendor", "title": "Informationen zum VEAP-Server" }
+  }
 }
 ```
 
