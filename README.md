@@ -39,6 +39,19 @@ Aus der obigen Wahl der Basis-Technologien ergeben sich viele Vorteile:
 * Sicherheit
   * Ohne nennenswerten Mehraufwand können Benutzer authentifiziert werden. Zudem ist eine auf dem aktuellen Stand der Technik basierende Verschlüsselung mit Zertifikaten verfügbar.
 
+## VEAP-Server
+
+Ein VEAP-Server ist an der Oberfläche ein einfacher HTTP- und/oder HTTPS-Server. Für dedizierte VEAP-Server sollten folgende Netzwerk-Ports verwendet werden:
+
+Port | Protokoll
+-----|----------
+2121 | HTTP
+2122 | HTTPS
+
+Bei HTTP/S-Servern, die auch andere Dokumente (z.B. HTML-Seiten) ausliefern, sollte das VEAP-Wurzelobjekt über den Pfad `/veap` zu finden sein.
+
+Der `Content-Type` der ausgetauschten VEAP-Anfragen und -Antworten sollte `application/json` sein.
+
 ## Datenmodell
 
 Im Bereich der Automatisierung muss ein Protokoll Messwerte (z.B. Temperaturen) von Sensoren lesen und Zustände von Aktoren (z.B. Heizventile) setzen können. Allgemein wird hier für einen Sensor- oder Aktorwert der Begriff Datenpunkt verwendet. Des Weiteren sollen die Datenpunkte erkundet werden können. Die Kommunikationspartner brauchen also kein Vorwissen darüber, welche Datenpunkte überhaupt existieren.
