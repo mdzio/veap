@@ -125,35 +125,48 @@ Beispiel-Antwort:
 
 Ein Objekt bzw. Datenpunkt kann selber andere Objekte enthalten, ähnlich wie ein Ordner in einem Dateisystem, oder auf andere Objekte verweisen, ähnlich wie ein Verweis bzw. Link in einem Dateisystem. Wenn, wie im [vorigen Abschnitt](#objekt-datenpunkteigenschaften-lesen) beschrieben, die Objekteigenschaften gelesen werden, so werden zusätzlich die referenzierten Objekte aufgelistet.
 
-Referenzierte Objekte werden in der reservierten Objekteigenschaft ```~links``` aufgelistet. Es handelt sich dabei um ein JSON-Objekt, dessen Eigenschaftsnamen Beziehungstypen sind, und dessen Eigenschaftswerte entweder Link-Objekte (für 1:1 Beziehung) oder JSON-Arrays von Link-Objekten (für 1:N Beziehungen) sind. Link-Objekte besitzen mindestens die Eigenschaft ```href```, in der die absolute oder relative Adresse des referenzierten Objekts enthalten ist. Optional kann ein Link-Objekt die Eigenschaft ```title``` besitzen, die einen lesbaren Namen enthält.
+Mit Hilfe der Verweise kann ein VEAP-Client den kompletten Datenhaushalt eines VEAP-Servers **erkunden**. Er benötigt **kein Vorwissen** darüber, welche Datenpunkte überhaupt existieren.
 
-Beispiel (vom Objekt ```/sensor1```):
-```
-{
-  "~links": {
-    "datapoints": [
-      { "href": "/sensor1/temperature", "title": "Datenpunkt Temperatur" },
-      { "href": "/sensor1/humidity", "title": "Datenpunkt Luftfeuchtigkeit" }
-    ],
-    "room": { "href": "/rooms/kitchen", "title": "Raum des Sensors" }
-  }  
-}
-```
+Referenzierte Objekte werden in der reservierten Objekteigenschaft ```~links``` angegeben. Es handelt sich dabei um ein JSON-Array, dessen Elemente Link-Objekte sind. Link-Objekte besitzen mindestens die Eigenschaften ```rel``` (Relation) und ```href``` (Hypertext reference). ```rel``` enthält den Beziehungstypen und ```href``` enthält die absolute oder relative Adresse des referenzierten Objekts. Optional kann ein Link-Objekt auch die Eigenschaft ```title``` besitzen, die einen lesbaren Namen für diesen Verweis enthält.
 
-Es sind folgende Beziehungstypen vorab definiert (Singular bei einer 1:1-Beziehung, Plural bei einer 1:N-Beziehung):
+Es sind folgende Beziehungstypen vorab definiert:
 
   Typ        | Art des referenzierten Objektes
 :-----------:|:-------------------------------
-interface(s) | Kommunikationsschnittstelle(n)
-device(s)    | Gerät(e)
-channel(s)   | Kanal (Kanäle)
-datapoint(s) | Datenpunkt(e)
-room(s)      | Raum (Räume)
-function(s)  | Funktion(en) oder Gewerk(e)
-services     | Dienste; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
+interface    | Kommunikationsschnittstelle
+device       | Gerät
+channel      | Kanal
+datapoint    | Datenpunkt
+room         | Raum
+function     | Funktion oder Gewerk
+service      | Dienst; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
 vendor       | Informationen zum Server
 
 Jeder VEAP-Server kann zusätzlich beliebige eigene Beziehungstypen definieren und auch auf die Verwendung der vordefinierten verzichten.
+
+Beispiel vom Objekt ```/interface-rf/sensor1```:
+```
+{
+  "~links": [
+    { "rel": "datapoint", "href": "temperature", "title": "Datenpunkt Temperatur" },
+    { "rel": "datapoint", "href": "humidity", "title": "Datenpunkt Luftfeuchtigkeit" },
+    { "rel": "room", "href": "/rooms/kitchen", "title": "Raum des Sensors" }
+    { "rel": "interface", "href": "..", "title": "Schnittstelle" }
+  ]
+}
+```
+
+Beispiel vom Objekt ```/interface-rf/sensor1/temperature```:
+```
+{
+  "~links": [
+    { "rel": "service", "href": "~pv", "title": "Aktualwert" }
+    { "rel": "service", "href": "~hist", "title": "Historie" }
+    { "rel": "room", "href": "/rooms/kitchen", "title": "Raum des Datenpunkts" }
+    { "rel": "interface", "href": "../..", "title": "Schnittstelle" }
+  ]
+}
+```
 
 #### Hierarchie der Objekte
 
@@ -321,13 +334,11 @@ Die Referenzen auf die untergeordneten Objekte sind in der Eigenschaft ```~links
 HTTP 200 OK
 {
   "name": "Wurzelverzeichnis",
-  "~links": {
-    "datapoints": [
-      { "href": "/a", "title": "Datenpunkt A" }
-      { "href": "/b", "title": "Datenpunkt B" }
-    ],
-    "vendor": { "href": "/~vendor", "title": "Informationen zum VEAP-Server" }
-  }
+  "~links": [
+    { "rel": "datapoint", "href": "/a", "title": "Datenpunkt A" },
+    { "rel": "datapoint", "href": "/b", "title": "Datenpunkt B" },
+    { "rel": "vendor", "href": "/~vendor", "title": "Informationen zum VEAP-Server" }
+  ]
 }
 ```
 
