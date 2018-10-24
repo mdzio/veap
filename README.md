@@ -181,6 +181,7 @@ Dienst-Fehler werden über den zurückgegebenen HTTP-Status signalisiert. Die ve
 HTTP-Status|Bedeutung
 ----------:|:--------
    200     | OK
+   201     | OK, Objekt angelegt
    400     | Ungültige Anfrage (HTTP-Protokollfehler)
    401     | (Benutzer-)Authentifizierung nötig
    403     | Zugriffsrechte fehlen
