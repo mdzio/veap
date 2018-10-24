@@ -224,7 +224,17 @@ Beispiel-Antwort:
 
 ### Historie eines Datenpunktes schreiben (Optional)
 
-Über die HTTP-Methode PUT (ein Server kann zusätzlich auch die POST-Methode akzeptieren) und der Adressendung ```/~hist``` wird die Historie eines Datenpunktes beschrieben. Die Historie ist [wie oben beschrieben](#historie-eines-datenpunktes-lesen-optional) aufgebaut.
+Über die HTTP-Methode ```PUT```  (ein Server kann zusätzlich auch die POST-Methode akzeptieren) und der Adressendung ```/~hist``` wird die Historie eines Datenpunktes beschrieben. Die Historie ist [wie oben beschrieben](#historie-eines-datenpunktes-lesen-optional) aufgebaut.
+
+### Erstellen und Ändern von Objekten (Optional)
+
+Mit der HTTP-Methode ```PUT``` auf ein Objektpfad können die Eigenschaften eines Objektes geändert werden. Falls ein Objekt auf diesem Pfad nicht existiert, so wird dieses im VEAP-Server erstellt. Es muss ein JSON-Objekt übergeben werden, dass alle zu setzenden Eigenschaften enthält. Falls erfolgreich ein VEAP-Objekt erstellt werden konnte, so wird der HTTP-Status-Code ```201``` (Created) anstatt ```200``` (OK) zurück geliefert.
+
+Objektbeziehungen können mit diesem Dienst nicht erstellt oder gelöscht werden.
+
+### Löschen von Objekten (Optional)
+
+Mit der HTTP-Methode ```DELETE``` auf ein Objektpfad wird das entsprechende Objekt gelöscht. 
 
 ## Beispiele
 
