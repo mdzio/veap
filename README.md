@@ -72,6 +72,8 @@ Adressbestandteile, die mit einer Tilde (~) beginnen, sind für das VEAP-Protoko
 * serverDescription (optional)
 * vendorName (optional)
 
+Betriebsdaten des Server (z.B. Zugriffsstatistiken) sollten unterhalb des Vendor-Objektes als Prozesswerte abgebildet werden. Beispiel: ```/~vendor/statistics/requests/~pv```
+
 ## Dienste
 
 Jedes Objekt kann verschiedene Dienste anbieten. Die Dienste werden auf ein HTTP-Verb (z.B. GET) und/oder auf ein spezielles Adressende (z.B. ```/~pv```) abgebildet. Die zu übertragenden Datenstrukturen werden mit Hilfe der [JavaScript Object Notation (JSON)](https://de.wikipedia.org/wiki/JavaScript_Object_Notation) kodiert. Die Standardzeichenkodierung ist [UTF-8](https://de.wikipedia.org/wiki/UTF-8).
@@ -109,7 +111,9 @@ Als Prozesswerte werden veränderliche Eigenschaften eines Objektes abgebildet. 
 
 ### Objekt-/Datenpunkteigenschaften lesen
 
-Über die HTTP-Methode GET und der unveränderten Objektadresse werden applikationsspezifische Eigenschaften ([und auch die Beziehungen](#objektbeziehungen-erkunden)) eines Objekts ausgelesen. Diese Eigenschaften verändern sich im Gegensatz zum Prozesswert selten. Die Bezeichner der Eigenschaften können frei gewählt werden, dürfen aber nicht mit einer Tilde (~) beginnen. In der Eigenschaft `title` sollte ein lesbarer Bezeichner für das Objekt untergebracht werden.
+Über die HTTP-Methode GET und der unveränderten Objektadresse werden applikationsspezifische Eigenschaften ([und auch die Beziehungen](#objektbeziehungen-erkunden)) eines Objekts ausgelesen. Diese Eigenschaften verändern sich im Gegensatz zum Prozesswert selten. Die Bezeichner der Eigenschaften können frei gewählt werden, dürfen aber nicht mit einer Tilde (~) beginnen.
+
+In der Eigenschaft `title` kann ein lesbarer Bezeichner für das Objekt untergebracht werden. In der Eigenschaft `description` kann eine Beschreibung abgelegt werden.
 
 Beispiel-Antwort:
 ```
@@ -118,6 +122,21 @@ Beispiel-Antwort:
   "description": "4xGU10,20W",
   "address": "BidCos-RF.ABC01232:3.STATE",
   "iseId": 1234
+}
+```
+
+Bei Prozesswerten können je nach Vorhandensein zusätzlich folgende Eigenschaften angeboten werden: `minimum`, `maximum` und `unit`.
+
+Beispiel-Antwort:
+```
+{
+  "title": "Helligkeit außen",
+  "description": "Helligkeitssensor Wetterstation",
+  "address": "BidCos-RF.ABC01232:3.LUX",
+  "iseId": 1234,
+  "minimum": 0,
+  "maximum": 200000,
+  "unit": "Lux"
 }
 ```
 
