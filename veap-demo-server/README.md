@@ -38,6 +38,11 @@ Folgende Beispielabfragen können mit einem einfachen Web-Browser durchgeführt 
 
 (in Arbeit)
 
+## Besondere Merkmale
+
+* Unterstützung für HTTP/2 und TLS 1.2
+* Automatische Generierung von Zertifikaten
+ 
 ## Zurzeit nicht implementierte VEAP-Merkmale
 
 * Nicht-hierarchische Verlinkung
