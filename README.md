@@ -8,6 +8,10 @@ Für die Ungeduldigen sind [Protokollbeispiele weiter unten](#beispiele) zu find
 
 **Das VEAP-Protokoll befindet sich zurzeit noch in der Entwicklung!**
 
+### VEAP-Demo-Server
+
+Der [VEAP-Demo-Server](veap-demo-server/README.md) implementiert beispielhaft das Protokoll. Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.
+
 ### Begründung für ein neues Protokoll
 
  Bereich der Automatisierung und dem Internet-der-Dinge existiert bereits eine Vielzahl an herstellerunabhängigen Protokollen (u.a. [MQTT](https://de.wikipedia.org/wiki/MQTT), [CoAP](https://de.wikipedia.org/wiki/Constrained_Application_Protocol), [OPC-UA](https://de.wikipedia.org/wiki/OPC_Unified_Architecture)). Eine Untersuchung hat allerdings ergeben, dass keines dieser Kommunikationsprotokolle alle oben geforderten Eigenschaften besitzt. Sie sind beispielsweise funktional eingeschränkt (z.B. MQTT) oder aufwändig zu implementieren (z.B. CoAP, OPC-UA). 
