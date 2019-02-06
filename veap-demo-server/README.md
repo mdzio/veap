@@ -4,6 +4,11 @@ Der VEAP-Demo-Server implementiert beispielhaft das [Very Easy Automation Protoc
 
 **Zurzeit befindet sich der VEAP-Demo-Server noch in der Entwicklung!**
 
+## Besondere Merkmale
+
+* Unterstützung für HTTP/2 und TLS 1.2
+* Automatische Generierung von Zertifikaten
+ 
 ## Download
 
 Der VEAP-Demo-Server besteht aus nur einer ausführbaren Datei ohne Abhängigkeiten. Sie kann aus folgenden Paketen entpackt und sofort gestartet werden:
@@ -36,13 +41,138 @@ usage of veap-demo-server:
 
 Folgende Beispielabfragen können mit einem einfachen Web-Browser durchgeführt werden:
 
-(in Arbeit)
+### Erkundung des Wurzelobjekts
 
-## Besondere Merkmale
+Anfrage: \
+HTTP-GET auf http://localhost:2121
 
-* Unterstützung für HTTP/2 und TLS 1.2
-* Automatische Generierung von Zertifikaten
- 
+Antwort:
+```
+{
+    "description": "Root object of the VEAP object tree",
+    "identifier": "root",
+    "title": "Root",
+    "~links": [
+        {
+            "rel": "component",
+            "href": "const",
+            "title": "Constant values"
+        },
+        {
+            "rel": "component",
+            "href": "states",
+            "title": "State values"
+        },
+        {
+            "rel": "component",
+            "href": "gen",
+            "title": "Generators"
+        },
+        {
+            "rel": "component",
+            "href": "vars",
+            "title": "Variables"
+        },
+        {
+            "rel": "component",
+            "href": "types",
+            "title": "Data Types"
+        },
+        {
+            "rel": "component",
+            "href": "ts",
+            "title": "Timestamps"
+        },
+        {
+            "rel": "component",
+            "href": "tree",
+            "title": "Tree"
+        },
+        {
+            "rel": "component",
+            "href": "~vendor",
+            "title": "Vendor Information"
+        }
+    ]
+}
+```
+
+### Erkundung von /gen
+
+Anfrage: \
+HTTP-GET auf http://localhost:2121/gen
+
+Antwort:
+```
+{
+    "description": "Various generators. Variable x is set to the number of seconds since 01.01.1970 00:00 UTC (unix epoch).",
+    "identifier": "gen",
+    "title": "Generators",
+    "~links": [
+        {
+            "rel": "generator",
+            "href": "rand",
+            "title": "rand"
+        },
+        {
+            "rel": "generator",
+            "href": "x",
+            "title": "x"
+        },
+        {
+            "rel": "generator",
+            "href": "sin_2pix_10",
+            "title": "sin(2*pi*x/10)"
+        },
+        {
+            "rel": "parent",
+            "href": "..",
+            "title": "Root"
+        }
+    ]
+}
+```
+
+### Erkundung von /gen/rand
+
+Anfrage: \
+HTTP-GET auf http://localhost:2121/gen/rand
+
+Antwort:
+```
+{
+    "description": "Random number in [0, 1.0).",
+    "identifier": "rand",
+    "title": "rand",
+    "~links": [
+        {
+            "rel": "parent",
+            "href": "..",
+            "title": "Generators"
+        },
+        {
+            "rel": "service",
+            "href": "~pv",
+            "title": "PV Service"
+        }
+    ]
+}
+```
+
+### Prozesswert von /gen/rand lesen
+
+Anfrage: \
+HTTP-GET auf http://localhost:2121/gen/rand/~pv
+
+Antwort:
+```
+{
+    "ts": 1594594800000,
+    "v": 0.2065826619136986,
+    "s": 0
+}
+```
+
 ## Zurzeit nicht implementierte VEAP-Merkmale
 
 * Nicht-hierarchische Verlinkung
