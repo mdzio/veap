@@ -13,9 +13,17 @@ Der VEAP-Demo-Server implementiert beispielhaft das [Very Easy Automation Protoc
 
 Der VEAP-Demo-Server besteht aus nur einer ausführbaren Datei ohne Abhängigkeiten. Sie kann aus folgenden Paketen entpackt und sofort gestartet werden:
 
-* [veap-demo-server-0.1.0-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.1.0-win.zip)
-* [veap-demo-server-0.1.0-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.1.0-linux.tgz)
-* [veap-demo-server-0.1.0-macos.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.1.0-macos.tgz) (ungetestet)
+* [veap-demo-server-0.2.0-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-win.zip)
+* [veap-demo-server-0.2.0-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-linux.tgz)
+* [veap-demo-server-0.2.0-macos.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-macos.tgz) (ungetestet)
+
+### Änderungen
+
+* 0.2.0
+  * Lesen von Zeitreihen (Pfad /hist)
+  * Dynamisches Erstellen und Löschen von Objekten (Pfad /dyn) 
+* 0.1.0
+  * Erste veröffentlichte Version
 
 ## Kommandozeilenoptionen
 
@@ -173,10 +181,43 @@ Antwort:
 }
 ```
 
+### Historie von /hist/sin_2pix_10/1s lesen
+
+Zeitbereichsbegin: 1.1.2019 00:00:00 UTC \
+Zeitbereichsende: 1.1.2019 00:00:20 UTC
+
+Anfrage: \
+HTTP-GET auf http://localhost:2121/hist/sin_2pix_10/1s/~hist?begin=1546300800000&end=1546300820000
+
+Antwort:
+```
+{
+    "ts": [
+        1546300800000, 1546300801000, 1546300802000, 1546300803000, 1546300804000,
+        1546300805000, 1546300806000, 1546300807000, 1546300808000, 1546300809000,
+        1546300810000, 1546300811000, 1546300812000, 1546300813000, 1546300814000,
+        1546300815000, 1546300816000, 1546300817000, 1546300818000, 1546300819000
+    ],
+    "v": [
+        -1.0120201733657937e-7, 0.5877851845636222, 0.9510565326657553, 0.9510565681969049, 0.5877852775854129,
+        1.3779237332854878e-8, -0.5877851588477938, -0.951056486005484, -0.9510565043440965, -0.5877853033012385,
+        -4.5565746879911025e-8, 0.5877852295743122, 0.9510564761829089, 0.9510565141666689, 0.5877852325747247,
+        7.735225642696754e-8, -0.5877852038584851, -0.9510565400357351, -0.951056560826927, -0.5877852582905514
+    ],
+    "s": [
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0
+    ]
+}
+```
+
+
 ## Zurzeit nicht implementierte VEAP-Merkmale
 
 * Nicht-hierarchische Verlinkung
-* Lesen- und Schreiben von Zeitreihen
+* Schreiben von Zeitreihen
 
 ## Sicherer Zugriff über HTTPS
 
