@@ -6,8 +6,6 @@ Das Protokoll kann beispielsweise im Bereich der Gebäudeautomatisierung oder f�
 
 Für die Ungeduldigen sind [Protokollbeispiele weiter unten](#beispiele) zu finden.
 
-**Das VEAP-Protokoll befindet sich zurzeit noch in der Entwicklung!**
-
 ### VEAP-Demo-Server
 
 Der [VEAP-Demo-Server](veap-demo-server/README.md) implementiert beispielhaft das Protokoll. Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.

@@ -2,8 +2,6 @@
 
 Der VEAP-Demo-Server implementiert beispielhaft das [Very Easy Automation Protocol](https://github.com/mdzio/veap). Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.
 
-**Zurzeit befindet sich der VEAP-Demo-Server noch in der Entwicklung!**
-
 ## Besondere Merkmale
 
 * Unterstützung für HTTP/2 und TLS 1.2
@@ -13,12 +11,16 @@ Der VEAP-Demo-Server implementiert beispielhaft das [Very Easy Automation Protoc
 
 Der VEAP-Demo-Server besteht aus nur einer ausführbaren Datei ohne Abhängigkeiten. Sie kann aus folgenden Paketen entpackt und sofort gestartet werden:
 
-* [veap-demo-server-0.2.0-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-win.zip)
-* [veap-demo-server-0.2.0-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-linux.tgz)
-* [veap-demo-server-0.2.0-macos.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-0.2.0-macos.tgz) (ungetestet)
+* [veap-demo-server-1.0.0-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-win.zip)
+* [veap-demo-server-1.0.0-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-linux.tgz)
+* [veap-demo-server-1.0.0-darwin.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-darwin.tgz) (ungetestet)
 
 ### Änderungen
 
+* 1.0.0
+  * Schreiben von Zeitreihen (Pfad /whist)
+* 0.3.0
+  * Nicht-hierarchische Verlinkung (Pfad /linked)
 * 0.2.0
   * Lesen von Zeitreihen (Pfad /hist)
   * Dynamisches Erstellen und Löschen von Objekten (Pfad /dyn) 
@@ -212,12 +214,6 @@ Antwort:
     ]
 }
 ```
-
-
-## Zurzeit nicht implementierte VEAP-Merkmale
-
-* Nicht-hierarchische Verlinkung
-* Schreiben von Zeitreihen
 
 ## Sicherer Zugriff über HTTPS
 
