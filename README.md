@@ -374,14 +374,6 @@ HTTP 200 OK
 }
 ```
 
-## Geplante Erweiterungen
-
-### Ereignisorientierte Abfrage von Datenpunkten (Optional)
-
-Wenn ein VEAP-Server diesen Dienst anbietet, hat ein Client die Möglichkeit auf Datenpunktänderungen sofort reagieren zu können.
-
-_Dieser Dienst muss noch spezifiziert werden._
-
 ## Lizenz
 
 Dieses Werk ist lizenziert unter einer [Creative Commons Namensnennung - Weitergabe unter gleichen Bedingungen 4.0 International Lizenz](http://creativecommons.org/licenses/by-sa/4.0/).
