@@ -8,7 +8,7 @@ Für die Ungeduldigen sind [Protokollbeispiele weiter unten](#beispiele) zu find
 
 ### VEAP-Demo-Server
 
-Der [VEAP-Demo-Server](veap-demo-server/README.md) implementiert beispielhaft das Protokoll. Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.
+Der [VEAP-Demo-Server](veap-demo-server/README_de.md) implementiert beispielhaft das Protokoll. Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.
 
 ### Begründung für ein neues Protokoll
 
