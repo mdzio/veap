@@ -11,9 +11,9 @@ The VEAP demo server implements the [Very Easy Automation Protocol](https://gith
 
 The VEAP demo server consists of only one executable file without dependencies. It can be unpacked from the following packages and started immediately:
 
-* [veap-demo-server-1.0.0-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-win.zip)
-* [veap-demo-server-1.0.0-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-linux.tgz)
-* [veap-demo-server-1.0.0-darwin.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.0-darwin.tgz) (ungetestet)
+* [veap-demo-server-1.0.1-win.zip](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.1-win.zip)
+* [veap-demo-server-1.0.1-linux.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.1-linux.tgz)
+* [veap-demo-server-1.0.1-darwin.tgz](https://github.com/mdzio/veap/raw/master/veap-demo-server/veap-demo-server-1.0.1-darwin.tgz) (ungetestet)
 
 ### Changes
 
