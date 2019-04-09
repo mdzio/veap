@@ -71,10 +71,11 @@ Address components that begin with a tilde (~) are keywords reserved for the VEA
 #### Special objects
 
 The ```/~vendor``` object can be used to explore the properties of the VEAP server. The following properties are defined:
-* serverName (optional)
-* serverVersion (optional)
-* serverDescription (optional)
-* vendorName (optional)
+* serverName (String, optional)
+* serverVersion (String, optional)
+* serverDescription (String, optional)
+* vendorName (String, optional)
+* veapVersion (VEAP protocol version, String, currently "1", optional)
 
 Operating data of the server (e.g. access statistics) should be displayed below the vendor object as process values. Example: ```/~vendor/statistics/requests/~pv```
 
@@ -260,6 +261,12 @@ Object relationships cannot be created or deleted with this service.
 
 The HTTP method ```DELETE``` on an object path deletes the corresponding object. 
 
+### Protocol extensions
+
+The protocol version supported by a VEAP server can be retrieved from the `veapVersion` property of the `/~vendor` object. Currently only version "1" of the protocol exists.
+
+The aim is to make protocol extensions so that they are downward compatible. Older VEAP clients should therefore be able to work with newer VEAP servers without changes.
+
 ## Examples
 
 (In the requests and responses given below, the HTTP protocol is only shown in simplified form.)
@@ -347,7 +354,8 @@ HTTP 200 OK
   "serverName": "Minimal VEAP server",
   "serverVersion": "0.1.0",
   "serverDescription": "A minimal VEAP-Server for demonstration",
-  "vendorName": "VEAP"
+  "vendorName": "VEAP",
+  "veapVersion": "1"
 }
 ```
 

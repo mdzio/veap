@@ -69,10 +69,11 @@ Adressbestandteile, die mit einer Tilde (~) beginnen, sind für das VEAP-Protoko
 #### Besondere Objekte
 
 Über das Objekt ```/~vendor``` können Eigenschaften des VEAP-Servers erkundet werden. Folgende Eigenschaften sind definiert:
-* serverName (optional)
-* serverVersion (optional)
-* serverDescription (optional)
-* vendorName (optional)
+* serverName (String, optional)
+* serverVersion (String, optional)
+* serverDescription (String, optional)
+* vendorName (String, optional)
+* veapVersion (VEAP-Protokoll-Version, String, zurzeit "1", optional)
 
 Betriebsdaten des Server (z.B. Zugriffsstatistiken) sollten unterhalb des Vendor-Objektes als Prozesswerte abgebildet werden. Beispiel: ```/~vendor/statistics/requests/~pv```
 
@@ -258,6 +259,12 @@ Objektbeziehungen können mit diesem Dienst nicht erstellt oder gelöscht werden
 
 Mit der HTTP-Methode ```DELETE``` auf ein Objektpfad wird das entsprechende Objekt gelöscht. 
 
+### Protokollerweiterungen
+
+Die von einem VEAP-Server unterstützte Protokollversion kann über die Eigenschaft `veapVersion` des `/~vendor` Objekts abgefragt werden. Zurzeit existiert nur die Version "1" des Protokolls.
+
+Es wird angestrebt Protokollerweiterungen so vorzunehmen, dass sie abwärtskompatibel sind. Ältere VEAP-Clients sollen also ohne Änderung mit neueren VEAP-Servern zusammen arbeiten können.
+
 ## Beispiele
 
 (In den unten angegebenen Anfragen und Antworten wird das HTTP-Protkoll nur vereinfacht dargestellt.)
@@ -345,7 +352,8 @@ HTTP 200 OK
   "serverName": "Minimal VEAP-Server",
   "serverVersion": "0.1.0",
   "serverDescription": "A minimal VEAP-Server for demonstration",
-  "vendorName": "VEAP"
+  "vendorName": "VEAP",
+  "veapVersion": "1"
 }
 ```
 
