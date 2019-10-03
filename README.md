@@ -8,9 +8,11 @@ The protocol can be used, for example, in the field of building automation or fo
 
 For the impatient, [protocol examples can be found below](#examples).
 
-### VEAP demo server
+### VEAP Implementations
 
 The [VEAP demo server](veap-demo-server/README.md) implements the protocol as an example. It should serve as a reference implementation and for testing VEAP clients.
+
+Another implementation is the [CCU-Jack](https://github.com/mdzio/ccu-jack) for the HomeMatic home automation system from eQ-3.
 
 ### Reason for a new protocol
 
