@@ -110,7 +110,7 @@ Number | Symbol | Description
 100 to 199 | _UNCERTAIN_ | The measured value is questionable.
 200 to 299 | _BAD_ | The measured value is bad and should not be processed further.
 
-Variable properties of an object are mapped as process values. Static properties are determined via [Read object properties] (#Object data-point properties-read).
+Variable properties of an object are mapped as process values. Static properties are determined via [Read object properties](#read-objectdata-point-properties).
 
 ### Write data point
 
