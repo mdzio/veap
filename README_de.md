@@ -10,7 +10,7 @@ Für die Ungeduldigen sind [Protokollbeispiele weiter unten](#beispiele) zu find
 
 Der [VEAP-Demo-Server](veap-demo-server/README_de.md) implementiert beispielhaft das Protokoll. Er soll als Referenzimplementierung und zum Testen von VEAP-Clients dienen.
 
-Eine weitere Implementierung ist der [CCU-Jack](https://github.com/mdzio/ccu-jack) für das HomeMatic Hausautomationssystem von eQ-3.
+Eine weitere Implementierung ist der [CCU-Jack](https://github.com/mdzio/ccu-jack) für das HomeMatic Hausautomationssystem von eQ-3. Er verwendet die [VEAP-Implementierung in der Programmiersprache Go](https://github.com/mdzio/go-veap).
 
 ### Begründung für ein neues Protokoll
 
