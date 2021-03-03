@@ -215,7 +215,9 @@ HTTP Status| Meaning
    422 | Request does not conform to VEAP protocol
    500 | Unexpected server error
 
-For a simple VEAP client, it is sufficient to compare the HTTP status with 200. Any status not equal to 200 is then interpreted as an error.
+For a simple VEAP client, it is sufficient to check whether the HTTP status is in the range 200 to 299. Any status outside this range is then interpreted as an error.
+
+In the HTTP response, the VEAP server can include a JSON object with an extended error description. In the JSON object at least the `message` property should be set with a textual description of the error. Example: `{"message": "Temperature setpoint is out of range."}` Also for an error response the `Content-Type` should be set to `application/json`.
 
 ### Read history of a data point (optional)
 

@@ -213,7 +213,9 @@ HTTP-Status|Bedeutung
    422     | Anfrage entspricht nicht dem VEAP-Protokoll
    500     | Unerwarteter Fehler im Server
 
-Für einen einfachen VEAP-Client reicht es aus, den HTTP-Status mit 200 zu vergleichen. Jeder Status ungleich 200 wird dann als Fehler interpretiert.
+Für einen einfachen VEAP-Client reicht eine Prüfung, ob der HTTP-Status im Bereich von 200 bis 299 liegt. Jeder Status außerhalb wird dann als Fehler interpretiert.
+
+In der HTTP-Antwort kann der VEAP-Server ein JSON-Objekt mit einer erweiterten Fehlerbeschreibung mitgeben. In dem JSON-Objekt sollte zumindest die Eigenschaft `message` mit einer textuellen Beschreibung des Fehlers gesetzt sein. Beispiel: `{"message":"Temperaturvorgabe liegt außerhalb des Bereichs."}` Auch bei einer Fehlerantwort sollte der `Content-Type` auf `application/json` gesetzt werden.
 
 ### Historie eines Datenpunktes lesen (Optional)
 
