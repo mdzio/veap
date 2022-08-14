@@ -161,7 +161,7 @@ Antwort:
             "title": "Generators"
         },
         {
-            "rel": "service",
+            "rel": "~service",
             "href": "~pv",
             "title": "PV Service"
         }

@@ -163,8 +163,7 @@ channel      | Kanal
 datapoint    | Datenpunkt
 room         | Raum
 function     | Funktion oder Gewerk
-service      | Dienst; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
-vendor       | Informationen zum Server
+~service     | Dienst; Die Zieladresse muss entweder auf ```/~pv``` oder ```/~hist``` enden.
 
 Jeder VEAP-Server kann zusätzlich beliebige eigene Beziehungstypen definieren und auch auf die Verwendung der vordefinierten verzichten.
 
@@ -184,8 +183,8 @@ Beispiel vom Objekt ```/interface-rf/sensor1/temperature```:
 ```
 {
   "~links": [
-    { "rel": "service", "href": "~pv", "title": "Aktualwert" }
-    { "rel": "service", "href": "~hist", "title": "Historie" }
+    { "rel": "~service", "href": "~pv", "title": "Aktualwert" }
+    { "rel": "~service", "href": "~hist", "title": "Historie" }
     { "rel": "room", "href": "/rooms/kitchen", "title": "Raum des Datenpunkts" }
     { "rel": "interface", "href": "../..", "title": "Schnittstelle" }
   ]
